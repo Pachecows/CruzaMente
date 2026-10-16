@@ -1,0 +1,28 @@
+# Regras gerais do monorepo.
+# O frontend tem o seu próprio .gitignore em frontend/.gitignore (regras de Node).
+
+# Sistema operativo / editores
+.DS_Store
+Thumbs.db
+.vscode/*
+!.vscode/extensions.json
+.idea
+*.swp
+
+# Logs
+*.log
+
+# Artefactos / caches que possam surgir na raiz
+.vite/
+dist/
+
+# --- Backend (Python / FastAPI) — fase futura ---
+backend/__pycache__/
+backend/**/__pycache__/
+backend/*.py[cod]
+backend/.venv/
+backend/venv/
+backend/env/
+backend/.env
+backend/.pytest_cache/
+backend/.mypy_cache/

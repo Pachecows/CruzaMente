@@ -1,0 +1,49 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Poppins:wght@500;600;700;800&display=swap');
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  html {
+    scroll-behavior: smooth;
+  }
+
+  body {
+    @apply bg-navy-50 font-sans text-navy-900 antialiased;
+  }
+
+  /* Foco visível e consistente para navegação por teclado. */
+  :focus-visible {
+    @apply outline-none ring-2 ring-brand-500 ring-offset-2 ring-offset-white;
+  }
+}
+
+@layer components {
+  /* Container de scroll com encaixe obrigatório por secção. */
+  .snap-container {
+    @apply h-screen snap-y snap-mandatory overflow-y-scroll scroll-smooth;
+  }
+
+  /* Link invisível que aparece ao navegar por teclado (skip to content). */
+  .skip-link {
+    @apply sr-only focus:not-sr-only focus:fixed focus:left-4 focus:top-4 focus:z-50
+      focus:rounded-md focus:bg-brand-600 focus:px-4 focus:py-2 focus:text-sm
+      focus:font-semibold focus:text-white;
+  }
+}
+
+/* Respeitar quem prefere menos movimento. */
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+  }
+}
