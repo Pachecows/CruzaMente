@@ -1,5 +1,8 @@
-import { Layers, Palette, Sparkles, Wand2 } from 'lucide-react'
+import { ArrowRight, Layers, Palette, Sparkles, Wand2 } from 'lucide-react'
 import type { LucideIcon } from 'lucide-react'
+import type { MouseEvent } from 'react'
+import { useNavigate } from 'react-router-dom'
+import Button from '../ui/Button'
 import CrosswordMockup from '../ui/CrosswordMockup'
 import Section from '../ui/Section'
 
@@ -42,6 +45,18 @@ const features: Feature[] = [
  * Secção de destaque do produto CruzaMente, com um mockup visual da grelha.
  */
 function ProductShowcase() {
+  const navigate = useNavigate()
+
+  // Link real para /jogar (acessível e com ctrl/cmd+clique), mas com
+  // navegação SPA no clique normal, sem recarregar a página.
+  const handlePlay = (event: MouseEvent<HTMLAnchorElement>) => {
+    if (event.metaKey || event.ctrlKey || event.shiftKey || event.button !== 0) {
+      return
+    }
+    event.preventDefault()
+    navigate('/login')
+  }
+
   return (
     <Section id="cruzamente" ariaLabel="CruzaMente" className="bg-navy-900 text-white">
       <div className="grid items-center gap-12 lg:grid-cols-2">
@@ -83,7 +98,20 @@ function ProductShowcase() {
             })}
           </ul>
 
-          <p className="mt-8 font-sans text-sm text-navy-400">
+          <div className="mt-8">
+            <Button
+              as="a"
+              href="/login"
+              size="lg"
+              onClick={handlePlay}
+              className="bg-white text-navy-900 hover:bg-navy-100 focus-visible:ring-offset-navy-900"
+            >
+              Entrar no CruzaMente
+              <ArrowRight size={18} aria-hidden="true" />
+            </Button>
+          </div>
+
+          <p className="mt-6 font-sans text-sm text-navy-400">
             Pré-visualização do conceito. O jogo está em desenvolvimento.
           </p>
         </div>

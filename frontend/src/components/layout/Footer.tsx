@@ -52,8 +52,7 @@ function Footer() {
 
         <div className="mt-12 border-t border-navy-700 pt-6">
           <p className="font-sans text-sm text-navy-400">
-            © {currentYear} MenteLab. Projeto académico de demonstração. Todos os
-            direitos reservados.
+            © {currentYear} MenteLab. Todos os direitos reservados.
           </p>
         </div>
       </div>

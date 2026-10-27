@@ -57,9 +57,6 @@ function CallToAction() {
             Lisboa, Portugal
           </span>
         </div>
-        <p className="mt-6 font-sans text-xs text-brand-100">
-          Contactos fictícios, apresentados apenas para fins de demonstração.
-        </p>
       </div>
     </Section>
   )
