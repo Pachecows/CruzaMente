@@ -102,9 +102,10 @@ function ProductShowcase() {
             <Button
               as="a"
               href="/login"
+              variant="secondary"
               size="lg"
               onClick={handlePlay}
-              className="bg-white text-navy-900 hover:bg-navy-100 focus-visible:ring-offset-navy-900"
+              className="focus-visible:ring-offset-navy-900"
             >
               Entrar no CruzaMente
               <ArrowRight size={18} aria-hidden="true" />

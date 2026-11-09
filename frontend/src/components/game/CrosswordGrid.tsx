@@ -152,10 +152,15 @@ function CrosswordGrid({
     if (letter) moveNext(row, col)
   }
 
+  const letterSize = puzzle.size <= 5 ? 'text-3xl' : 'text-xl'
+
   return (
     <div
-      className="inline-grid gap-1 rounded-2xl bg-navy-900 p-3 shadow-xl"
-      style={{ gridTemplateColumns: `repeat(${puzzle.size}, minmax(0, 1fr))` }}
+      className="grid aspect-square w-full gap-1.5 rounded-2xl bg-navy-900 p-3 shadow-xl sm:gap-2 sm:p-4"
+      style={{
+        gridTemplateColumns: `repeat(${puzzle.size}, minmax(0, 1fr))`,
+        gridTemplateRows: `repeat(${puzzle.size}, minmax(0, 1fr))`,
+      }}
       role="grid"
       aria-label="Grelha de palavras cruzadas"
     >
@@ -168,7 +173,7 @@ function CrosswordGrid({
             return (
               <div
                 key={key}
-                className="h-11 w-11 rounded-sm bg-navy-700"
+                className="aspect-square rounded-sm bg-navy-700"
                 aria-hidden="true"
               />
             )
@@ -176,9 +181,9 @@ function CrosswordGrid({
 
           const isActive = active.row === row && active.col === col
           return (
-            <div key={key} className="relative" role="gridcell">
+            <div key={key} className="relative aspect-square" role="gridcell">
               {playable.number && (
-                <span className="pointer-events-none absolute left-0.5 top-0 z-10 text-[9px] font-semibold text-navy-400">
+                <span className="pointer-events-none absolute left-1 top-0.5 z-10 text-[11px] font-semibold text-navy-400">
                   {playable.number}
                 </span>
               )}
@@ -196,7 +201,7 @@ function CrosswordGrid({
                 onKeyDown={(e) => handleKeyDown(e, row, col)}
                 onFocus={() => onActiveChange(row, col)}
                 className={
-                  'h-11 w-11 rounded-sm text-center font-heading text-lg font-bold uppercase text-navy-900 caret-transparent transition-colors focus-visible:outline-none ' +
+                  `h-full w-full rounded-md text-center font-heading ${letterSize} font-bold uppercase text-navy-900 caret-transparent transition-colors focus-visible:outline-none ` +
                   (isActive ? 'bg-brand-200 ring-2 ring-brand-600' : 'bg-white hover:bg-brand-50')
                 }
               />

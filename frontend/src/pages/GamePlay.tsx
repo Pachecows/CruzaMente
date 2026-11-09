@@ -5,16 +5,17 @@ import CrosswordGrid from '../components/game/CrosswordGrid'
 import Button from '../components/ui/Button'
 import Logo from '../components/ui/Logo'
 import Modal from '../components/ui/Modal'
-import { demoPuzzle } from '../data/puzzle'
+import { getPuzzleByFormat } from '../data/puzzle'
 import type { Clue, Orientation } from '../data/puzzle'
 
-const STORAGE_KEY = 'cruzamente:partida-demo'
 const cellKey = (row: number, col: number) => `${row}-${col}`
 
+const storageKey = (format: string) => `cruzamente:partida:${format}`
+
 // Lê um progresso guardado anteriormente (via localStorage).
-function loadSaved(): Record<string, string> {
+function loadSaved(key: string): Record<string, string> {
   try {
-    const raw = localStorage.getItem(STORAGE_KEY)
+    const raw = localStorage.getItem(key)
     return raw ? (JSON.parse(raw) as Record<string, string>) : {}
   } catch {
     return {}
@@ -29,10 +30,13 @@ function GamePlay() {
   const navigate = useNavigate()
   const [searchParams] = useSearchParams()
   const theme = searchParams.get('tema') ?? 'livre'
+  const format = searchParams.get('formato') ?? '5x5'
   const level = searchParams.get('nivel') ?? 'facil'
 
-  const puzzle = demoPuzzle
-  const [entries, setEntries] = useState<Record<string, string>>(loadSaved)
+  const puzzle = useMemo(() => getPuzzleByFormat(format), [format])
+  const [entries, setEntries] = useState<Record<string, string>>(() =>
+    loadSaved(storageKey(format)),
+  )
   const [active, setActive] = useState({ row: 0, col: 0 })
   const [orientation, setOrientation] = useState<Orientation>('across')
   const [exitOpen, setExitOpen] = useState(false)
@@ -63,7 +67,7 @@ function GamePlay() {
 
   const handleSave = () => {
     try {
-      localStorage.setItem(STORAGE_KEY, JSON.stringify(entries))
+      localStorage.setItem(storageKey(format), JSON.stringify(entries))
       setSavedNote(true)
     } catch {
       // Ambiente sem localStorage: ignora silenciosamente.
@@ -92,7 +96,7 @@ function GamePlay() {
                 CruzaMente
               </h1>
               <p className="text-xs capitalize text-navy-500">
-                Tema: {theme} · Nível: {level}
+                Tema: {theme} · Formato: {format} · Nível: {level}
               </p>
             </div>
           </div>
@@ -117,20 +121,22 @@ function GamePlay() {
         </div>
       </header>
 
-      <main className="mx-auto grid w-full max-w-6xl flex-1 gap-10 px-6 py-10 lg:grid-cols-[auto_1fr]">
+      <main className="mx-auto grid w-full max-w-6xl flex-1 items-start gap-10 px-6 py-10 lg:grid-cols-[minmax(0,1fr)_320px]">
         {/* Grelha. */}
         <section aria-label="Grelha" className="flex flex-col items-center gap-4">
-          <CrosswordGrid
-            puzzle={puzzle}
-            entries={entries}
-            active={active}
-            orientation={orientation}
-            onChange={handleChange}
-            onActiveChange={(row, col) => setActive({ row, col })}
-            onToggleOrientation={() =>
-              setOrientation((o) => (o === 'across' ? 'down' : 'across'))
-            }
-          />
+          <div className="w-full max-w-[620px]">
+            <CrosswordGrid
+              puzzle={puzzle}
+              entries={entries}
+              active={active}
+              orientation={orientation}
+              onChange={handleChange}
+              onActiveChange={(row, col) => setActive({ row, col })}
+              onToggleOrientation={() =>
+                setOrientation((o) => (o === 'across' ? 'down' : 'across'))
+              }
+            />
+          </div>
           <p className="max-w-sm text-center text-xs leading-relaxed text-navy-500">
             Usa as setas para navegar, Espaço para alternar entre horizontal e
             vertical, e Backspace para apagar.
