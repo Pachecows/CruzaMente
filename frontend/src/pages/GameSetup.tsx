@@ -5,17 +5,18 @@ import { Link, useNavigate } from 'react-router-dom'
 import Button from '../components/ui/Button'
 import Logo from '../components/ui/Logo'
 import TextField from '../components/ui/TextField'
-import { difficulties, themes } from '../data/themes'
+import { difficulties, formats, themes } from '../data/themes'
 
 /**
- * Ecrã de configuração da partida: escolha de tema (predefinido ou livre) e
- * nível de dificuldade. As escolhas são passadas ao ecrã de jogo por query
- * params.
+ * Ecrã de configuração da partida: escolha de tema (predefinido ou livre),
+ * formato da grelha e nível de dificuldade. As escolhas são passadas ao ecrã
+ * de jogo por query params.
  */
 function GameSetup() {
   const navigate = useNavigate()
   const [selectedTheme, setSelectedTheme] = useState<string | null>(null)
   const [customTheme, setCustomTheme] = useState('')
+  const [format, setFormat] = useState<string | null>(null)
   const [difficulty, setDifficulty] = useState<string | null>(null)
   const [error, setError] = useState<string>()
 
@@ -38,12 +39,20 @@ function GameSetup() {
       setError('Escolhe um tema ou indica um tema livre.')
       return
     }
+    if (!format) {
+      setError('Escolhe um formato para a grelha.')
+      return
+    }
     if (!difficulty) {
       setError('Escolhe um nível de dificuldade.')
       return
     }
     setError(undefined)
-    const params = new URLSearchParams({ tema: theme, nivel: difficulty })
+    const params = new URLSearchParams({
+      tema: theme,
+      formato: format,
+      nivel: difficulty,
+    })
     navigate(`/jogar/partida?${params.toString()}`)
   }
 
@@ -72,7 +81,7 @@ function GameSetup() {
           Configurar a partida
         </h1>
         <p className="mt-2 text-navy-600">
-          Escolhe um tema e um nível de dificuldade para a tua grelha.
+          Escolhe um tema, o formato da grelha e um nível de dificuldade.
         </p>
 
         <form className="mt-10 flex flex-col gap-10" onSubmit={handleSubmit} noValidate>
@@ -138,6 +147,44 @@ function GameSetup() {
             </div>
           </fieldset>
 
+          {/* Formato */}
+          <fieldset>
+            <legend className="font-heading text-xl font-semibold text-navy-900">
+              Formato
+            </legend>
+            <p className="mt-1 text-sm text-navy-600">
+              Escolhe o tamanho da grelha.
+            </p>
+
+            <div className="mt-5 grid gap-4 sm:grid-cols-2">
+              {formats.map((item) => {
+                const active = format === item.id
+                return (
+                  <button
+                    key={item.id}
+                    type="button"
+                    onClick={() => setFormat(item.id)}
+                    aria-pressed={active}
+                    className={
+                      'flex flex-col items-start gap-2 rounded-2xl border p-5 text-left transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-500 focus-visible:ring-offset-2 ' +
+                      (active
+                        ? 'border-brand-600 bg-brand-50'
+                        : 'border-navy-200 bg-white hover:border-brand-400')
+                    }
+                  >
+                    <span className="flex items-center gap-2 font-heading text-base font-semibold text-navy-900">
+                      {item.label}
+                      {active && <Check size={16} className="text-brand-600" aria-hidden="true" />}
+                    </span>
+                    <span className="text-sm leading-relaxed text-navy-600">
+                      {item.description}
+                    </span>
+                  </button>
+                )
+              })}
+            </div>
+          </fieldset>
+
           {/* Dificuldade */}
           <fieldset>
             <legend className="font-heading text-xl font-semibold text-navy-900">
@@ -183,7 +230,7 @@ function GameSetup() {
             <Button
               type="submit"
               size="lg"
-              disabled={!themeChosen || !difficulty}
+              disabled={!themeChosen || !format || !difficulty}
             >
               Começar a jogar
               <ArrowRight size={18} aria-hidden="true" />

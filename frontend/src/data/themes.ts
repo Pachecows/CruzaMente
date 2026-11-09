@@ -48,6 +48,33 @@ export const themes: GameTheme[] = [
   },
 ]
 
+export interface GameFormat {
+  /** Identificador estável do formato (dimensão da grelha). */
+  id: '5x5' | '10x10'
+  /** Nome apresentado ao jogador. */
+  label: string
+  /** Descrição curta do formato. */
+  description: string
+  /** Dimensão (número de linhas/colunas) da grelha quadrada. */
+  size: number
+}
+
+/** Formatos de grelha disponíveis. */
+export const formats: GameFormat[] = [
+  {
+    id: '5x5',
+    label: '5 × 5',
+    description: 'Grelha compacta, para partidas rápidas.',
+    size: 5,
+  },
+  {
+    id: '10x10',
+    label: '10 × 10',
+    description: 'Grelha maior, para um desafio mais longo.',
+    size: 10,
+  },
+]
+
 export interface Difficulty {
   /** Identificador estável do nível. */
   id: 'facil' | 'medio' | 'dificil'
